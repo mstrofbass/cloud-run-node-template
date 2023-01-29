@@ -1,0 +1,33 @@
+name: "Deploy Cloud Run"
+
+on:
+  workflow_dispatch:
+  workflow_call:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    env:
+      DEPLOYMENT_ENV: dev
+      SERVICE_NAME: quote-service
+      IMAGE: us-central1-docker.pkg.dev/decent-artifacts/decent-docker/quote-service:latest
+
+    permissions:
+      contents: "read"
+      id-token: "write"
+
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v3
+
+      - id: auth
+        uses: google-github-actions/auth@v1
+        with:
+          workload_identity_provider: "projects/277892742324/locations/global/workloadIdentityPools/github/providers/github"
+          service_account: "github-actions@provider-data-services-dev.iam.gserviceaccount.com"
+
+      - id: "deploy"
+        uses: "google-github-actions/deploy-cloudrun@v1"
+        with:
+          service: ${{ env.SERVICE_NAME }}
+          image: ${{ env.IMAGE }}

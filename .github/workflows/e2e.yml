@@ -1,0 +1,41 @@
+name: "e2e Tests Workflow"
+
+on:
+  workflow_dispatch:
+    inputs:
+      e2e-endpoint-url:
+        required: true
+        type: string
+  workflow_call:
+    inputs:
+      e2e-endpoint-url:
+        required: true
+        type: string
+    secrets:
+      NEXUS_READ_USER:
+        required: true
+      NEXUS_READ_PASS:
+        required: true
+
+jobs:
+  run-e2e-tests:
+    runs-on: ubuntu-latest
+
+    # permissions:
+    #   contents: "read"
+    #   id-token: "write"
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Generate .npmrc
+        run: |
+          echo "//nexus.utility.decent.com/repository/decent-npm-releases/:_auth=$(echo -n ${{ secrets.NEXUS_READ_USER }}:${{ secrets.NEXUS_READ_PASS }} | openssl base64)" >> .npmrc
+          echo "//nexus.utility.decent.com/repository/npm-central/:_auth=$(echo -n ${{ secrets.NEXUS_READ_USER }}:${{ secrets.NEXUS_READ_PASS }} | openssl base64)" >> .npmrc
+          echo "always-auth=true" >> .npmrc
+          echo "strict-ssl=true" >> .npmrc
+      - name: Run e2e tests
+        run: |
+          npm ci
+          E2E_ENDPOINT_URL="${{ github.event.inputs.e2e-endpoint-url }}" npm run test:e2e

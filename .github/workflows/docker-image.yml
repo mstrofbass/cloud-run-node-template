@@ -1,0 +1,53 @@
+name: "Build and Push Docker Image"
+
+on:
+  workflow_dispatch:
+  workflow_call:
+    secrets:
+      NEXUS_READ_USER:
+        required: true
+      NEXUS_READ_PASS:
+        required: true
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    env:
+      DEPLOYMENT_ENV: dev
+      IMAGE_NAME: quote-service
+      ARTIFACT_PROJECT_ID: decent-artifacts
+      REPO_NAME: decent-docker
+
+    permissions:
+      contents: "read"
+      id-token: "write"
+
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v3
+
+      - id: auth
+        uses: google-github-actions/auth@v1
+        with:
+          workload_identity_provider: "projects/277892742324/locations/global/workloadIdentityPools/github/providers/github"
+          service_account: "github-actions@provider-data-services-dev.iam.gserviceaccount.com"
+
+      - name: Generate .npmrc
+        run: |
+          echo "//nexus.utility.decent.com/repository/decent-npm-releases/:_auth=$(echo -n ${{ secrets.NEXUS_READ_USER }}:${{ secrets.NEXUS_READ_PASS }} | openssl base64)" >> .npmrc
+          echo "//nexus.utility.decent.com/repository/npm-central/:_auth=$(echo -n ${{ secrets.NEXUS_READ_USER }}:${{ secrets.NEXUS_READ_PASS }} | openssl base64)" >> .npmrc
+          echo "always-auth=true" >> .npmrc
+          echo "strict-ssl=true" >> .npmrc
+
+      - name: Build Docker Image
+        run: docker build -t $IMAGE_NAME:latest .
+
+      - name: Configure Docker Client
+        run: |-
+          gcloud auth configure-docker --quiet
+          gcloud auth configure-docker us-central1-docker.pkg.dev --quiet
+
+      - name: Push Docker Image to Artifact Registry
+        run: |-
+          docker tag $IMAGE_NAME:latest us-central1-docker.pkg.dev/$ARTIFACT_PROJECT_ID/$REPO_NAME/$IMAGE_NAME:latest
+          docker push us-central1-docker.pkg.dev/$ARTIFACT_PROJECT_ID/$REPO_NAME/$IMAGE_NAME:latest

@@ -1,0 +1,30 @@
+name: PR Workflow
+
+on:
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      ENV: ci
+
+    strategy:
+      matrix:
+        node-version: [18.x, 19.x]
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: "npm"
+
+      - run: |
+          echo "//nexus.utility.decent.com/repository/decent-npm-releases/:_auth=$(echo -n ${{ secrets.NEXUS_READ_USER }}:${{ secrets.NEXUS_READ_PASS }} | openssl base64)" >> .npmrc
+          echo "//nexus.utility.decent.com/repository/npm-central/:_auth=$(echo -n ${{ secrets.NEXUS_READ_USER }}:${{ secrets.NEXUS_READ_PASS }} | openssl base64)" >> .npmrc
+          echo "always-auth=true" >> .npmrc
+          echo "strict-ssl=true" >> .npmrc
+          npm ci
+      - run: npm run test:integration

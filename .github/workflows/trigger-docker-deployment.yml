@@ -1,0 +1,27 @@
+name: "Trigger Docker Deployment"
+
+on:
+  workflow_dispatch:
+  push:
+    branches: ["main"]
+    paths:
+      - "app.js"
+      - ".env.ci"
+      - "src/**"
+      - "package-lock.json"
+
+jobs:
+  docker-image:
+    uses: DecentHealth/quote-service-js/.github/workflows/docker-image.yml@main
+    secrets: inherit
+
+  deploy-cloud-run:
+    uses: DecentHealth/quote-service-js/.github/workflows/deploy-cloud-run.yml@main
+    needs: docker-image
+
+  run-e2e-tests-on-dev:
+    uses: DecentHealth/quote-service-js/.github/workflows/e2e.yml@main
+    needs: deploy-cloud-run
+    with:
+      e2e-endpoint-url: https://quote-service-o7kkibx6ja-uc.a.run.app
+    secrets: inherit
