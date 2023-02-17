@@ -1,0 +1,49 @@
+name: "Build and Push Docker Image"
+
+on:
+  workflow_dispatch:
+    inputs:
+      yml-config-path:
+        required: true
+        type: string
+  workflow_call:
+    inputs:
+      yml-config-path:
+        required: true
+        type: string
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: "read"
+      id-token: "write"
+
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v3
+
+      - name: Load environment from YAML
+        uses: doughepi/yaml-env-action@v1.0.0
+        with:
+          files: ${{ inputs.yml-config-path }}
+
+      - id: auth
+        uses: google-github-actions/auth@v1
+        with:
+          workload_identity_provider: ${{ env.DOCKER_BUILD_WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ env.DOCKER_BUILD_GCP_SERVICE_ACCOUNT_EMAIL }}
+
+      - name: Build Docker Image
+        run: docker build -t ${{ env.DOCKER_BUILD_IMAGE_NAME }}:latest .
+
+      - name: Configure Docker Client
+        run: |-
+          gcloud auth configure-docker --quiet
+          gcloud auth configure-docker ${{ env.DOCKER_BUILD_CONTAINER_REGISTRY }} --quiet
+
+      - name: Push Docker Image to Artifact Registry
+        run: |-
+          docker tag ${{ env.DOCKER_BUILD_IMAGE_NAME }}:latest ${{ env.DOCKER_BUILD_CONTAINER_REGISTRY }}/${{ env.DOCKER_BUILD_IMAGE_PATH}}:latest
+          docker push ${{ env.DOCKER_BUILD_CONTAINER_REGISTRY }}/${{ env.DOCKER_BUILD_IMAGE_PATH}}:latest
