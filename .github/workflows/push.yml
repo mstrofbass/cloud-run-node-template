@@ -10,8 +10,6 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    env:
-      ENV: ci
 
     strategy:
       matrix:
@@ -25,11 +23,5 @@ jobs:
           node-version: ${{ matrix.node-version }}
           cache: "npm"
 
-      - name: Initialize npm
-        run: |
-          echo "//nexus.utility.decent.com/repository/decent-npm-releases/:_auth=$(echo -n ${{ secrets.NEXUS_READ_USER }}:${{ secrets.NEXUS_READ_PASS }} | openssl base64)" >> .npmrc
-          echo "//nexus.utility.decent.com/repository/npm-central/:_auth=$(echo -n ${{ secrets.NEXUS_READ_USER }}:${{ secrets.NEXUS_READ_PASS }} | openssl base64)" >> .npmrc
-          echo "always-auth=true" >> .npmrc
-          echo "strict-ssl=true" >> .npmrc
-          npm ci
+      - run: npm ci
       - run: npm run test:unit
