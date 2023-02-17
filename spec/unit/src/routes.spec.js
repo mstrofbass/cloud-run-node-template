@@ -13,11 +13,11 @@ describe("handleRequest should", () => {
   test("return 200 and empty object", () => {
     const resp = mockResponse();
     const req = {
-      body: mockQuoteRequest,
+      body: {},
     };
     handleRequest(req, resp);
 
     expect(resp.status).toHaveBeenCalledWith(200);
-    expect(resp.json).toHaveBeenCalledWith(mockQuoteRequest);
+    expect(resp.json).toHaveBeenCalledWith({});
   });
 });

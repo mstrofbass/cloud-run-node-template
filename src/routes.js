@@ -11,5 +11,5 @@ function handleRequest(req, res) {
 
 module.exports = {
   router,
-  handleRequest
+  handleRequest,
 };
