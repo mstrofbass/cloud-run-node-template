@@ -1,0 +1,14 @@
+docker-build:
+  workload-identity-provider: "projects/PROJECT_NUM/locations/global/workloadIdentityPools/github/providers/github"
+  gcp-service-account-email: "github-actions@PROJECT_ID.iam.gserviceaccount.com"
+  container-registry: "CONTAINER_REGISTRY"
+  image-name: "IMAGE_NAME"
+  image-path: "PROJECT_ID/REPOSITORY_NAME/IMAGE_NAME"
+
+deploy-cloud-run:
+  workload-identity-provider: "projects/PROJECT_NUM/locations/global/workloadIdentityPools/github/providers/github"
+  gcp-service-account-email: "github-actions@PROJECT_ID.iam.gserviceaccount.com"
+  service-region: GCP_REGION
+  service-name: SERVICE_NAME
+  image-path: "IMAGE_PATH"
+  env-vars-file-path: "deployment/env.prod.yml"
