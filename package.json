@@ -13,7 +13,7 @@
     "test:integration": "jest ./spec/integration",
     "test:non-e2e": "jest ./spec/unit ./spec/integration",
     "test:unit": "jest ./spec/unit",
-    "test:watch": "jest --testPathIgnorePatterns='spec/{e2e,system}/*' --watch"
+    "test:watch": "jest --testPathIgnorePatterns='spec/e2e/*' --watch"
   },
   "repository": {
     "type": "git",
