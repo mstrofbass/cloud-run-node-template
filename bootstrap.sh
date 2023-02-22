@@ -17,10 +17,10 @@ function retry_command () {
 
   echo "Trying command $@ with a sleep time of $SLEEP_TIME seconds"
   
-  for i in 1 2 3 
+  for i in 1 2 3 4 5 6 7 8 9 10
     do 
       echo "attempt $i" 
-      "$@" && break || sleep 5 
+      "$@" && break || sleep 10
     done
 }
 
