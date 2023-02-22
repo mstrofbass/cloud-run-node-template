@@ -68,6 +68,7 @@ Some enhancements that I think might be worthwhile:
 7. Go to the Actions tab for your repository on GitHub.
 8. Click on the `Trigger Build and Deployment` Action. 
 9. Click on the `Run workflow` dropdown and, leaving the `main` branch selected, click the `Run workflow` button.
+10. You probably *should not* commit your updated `gcp-config.sh` file to version control. I don't think there's a likelihood of any issues if you do, but there's probably no reason to do it in the first place.
 
 If all goes well, both the `Build and Push Docker Image` job and the `Deploy Cloud Run` job will run and you should be able to send a `GET` request to your service and get a `JSON` response of `{"hello": "world"}`. 
 
