@@ -1,12 +1,12 @@
 const express = require("express");
 const router = express.Router();
 
-router.post("/", function (req, res) {
+router.get("/", function (req, res) {
   handleRequest(req, res);
 });
 
 function handleRequest(req, res) {
-  res.status(200).json({});
+  res.status(200).json({"hello": "world"});
 }
 
 module.exports = {
