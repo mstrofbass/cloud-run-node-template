@@ -84,7 +84,7 @@ gcloud --project $PROJECT_NAME iam workload-identity-pools providers create-oidc
   --workload-identity-pool="github" \
   --issuer-uri="https://token.actions.githubusercontent.com" \
   --attribute-mapping="google.subject=assertion.sub,attribute.repository_visibility=assertion.repository_visibility,attribute.repository=assertion.repository" \
-  --attribute-condition="assertion.repository_visibility == "private" && assertion.repository in [\"$GITHUB_REPO_PATH\"]"
+  --attribute-condition="assertion.repository_visibility == \"private\" && assertion.repository in [\"$GITHUB_REPO_PATH\"]"
 
 
 # get project number because why would Google make this easy?
