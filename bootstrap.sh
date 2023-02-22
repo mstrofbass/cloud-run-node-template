@@ -12,6 +12,18 @@ echoEnvVar () {
   echo "  ${BLUE}$1:${NC} $2"
 }
 
+function retry_command () {
+  SLEEP_TIME=5
+
+  echo "Trying command $@ with a sleep time of $SLEEP_TIME seconds"
+  
+  for i in 1 2 3 
+    do 
+      echo "attempt $i" 
+      "$@" && break || sleep 5 
+    done
+}
+
 set -e
 script_dir=`dirname $0`
 
@@ -71,12 +83,17 @@ gcloud --project $PROJECT_NAME iam service-accounts create github-actions
 
 ###############
 # Create Workload Identity Federation Stuff
+#
+# I ran into an error saying:
+# ERROR: (gcloud.iam.workload-identity-pools.create) PERMISSION_DENIED: Permission 'iam.workloadIdentityPools.create' denied on resource 
+# '//iam.googleapis.com/projects/mstrofbass-test2/locations/global' (or it may not exist).
+# When I reran the command shortly after, it worked, so I think this was a creation delay so I'm adding a retry command fn.
 ###############
 
 echoRed "\n[Workload Identity Federation]\n"
 
 echoBlue "Creating the workload identity federation pool..."
-gcloud --project $PROJECT_NAME iam workload-identity-pools create github --location="global"
+retry_command gcloud --project $PROJECT_NAME iam workload-identity-pools create github --location="global"
 
 echoBlue "Creating the workload identity federation provider..."
 gcloud --project $PROJECT_NAME iam workload-identity-pools providers create-oidc github \
