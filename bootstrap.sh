@@ -30,6 +30,8 @@ fi
 # Create Project
 ###############
 
+echoRed "\n[Project Settings]\n"
+
 echoBlue "Creating project $PROJECT_NAME..."
 gcloud projects create $PROJECT_NAME
 
@@ -55,6 +57,8 @@ done
 # Create Service Accounts
 ###############
 
+echoRed "\n[Service Accounts]\n"
+
 GITHUB_SERVICE_ACCOUNT_EMAIL="github-actions@$PROJECT_NAME.iam.gserviceaccount.com"
 SERVICE_SERVICE_ACCOUNT_EMAIL="$SERVICE_NAME@$PROJECT_NAME.iam.gserviceaccount.com"
 
@@ -69,6 +73,8 @@ gcloud --project $PROJECT_NAME iam service-accounts create github-actions
 # Create Workload Identity Federation Stuff
 ###############
 
+echoRed "\n[Workload Identity Federation]\n"
+
 echoBlue "Creating the workload identity federation pool..."
 gcloud --project $PROJECT_NAME iam workload-identity-pools create github --location="global"
 
@@ -78,7 +84,7 @@ gcloud --project $PROJECT_NAME iam workload-identity-pools providers create-oidc
   --workload-identity-pool="github" \
   --issuer-uri="https://token.actions.githubusercontent.com" \
   --attribute-mapping="google.subject=assertion.sub,attribute.repository_visibility=assertion.repository_visibility,attribute.repository=assertion.repository" \
-  --attribute-condition='assertion.repository_visibility == "private" && assertion.repository in ["$GITHUB_REPO_PATH"]'
+  --attribute-condition="assertion.repository_visibility == "private" && assertion.repository in [\"$GITHUB_REPO_PATH\"]"
 
 
 # get project number because why would Google make this easy?
@@ -98,6 +104,8 @@ gcloud --project $PROJECT_NAME iam service-accounts add-iam-policy-binding $GITH
 # Create artifact registry repository
 ###############
 
+echoRed "\n[Artifact Registry]\n"
+
 echoBlue "Creating the artifact registry repository..."
 gcloud --project $PROJECT_NAME artifacts repositories create $DOCKER_REPO_NAME \
     --repository-format=docker \
@@ -108,6 +116,8 @@ gcloud --project $PROJECT_NAME artifacts repositories create $DOCKER_REPO_NAME \
 ###############
 # Create service
 ###############
+
+echoRed "\n[Cloud Run]\n"
 
 echoBlue "Creating the initial Cloud Run service..."
 gcloud --project $PROJECT_NAME run deploy $SERVICE_NAME \
@@ -129,6 +139,8 @@ gcloud --project $PROJECT_NAME run deploy $SERVICE_NAME \
 # this script elsewhere
 ###############
 
+echoRed "\n[Permissions]\n"
+
 echoBlue "Assigning the roles/run.developer role to the $GITHUB_SERVICE_ACCOUNT_EMAIL service account"
 gcloud projects add-iam-policy-binding $PROJECT_NAME --member="serviceAccount:$GITHUB_SERVICE_ACCOUNT_EMAIL" --role="roles/run.developer"
 
@@ -142,6 +154,8 @@ gcloud --project $PROJECT_NAME iam service-accounts add-iam-policy-binding $SERV
 ###############
 # Write out the deployment config file
 ###############
+
+echoRed "\n[Deployment Configuration]\n"
 
 WORKLOAD_IDENTITY_PROVIDER="projects/$PROJECT_NUMBER/locations/global/workloadIdentityPools/github/providers/github"
 CONTAINER_REGISTRY="$REGION-docker.pkg.dev"
