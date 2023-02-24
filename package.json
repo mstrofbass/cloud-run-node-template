@@ -1,8 +1,9 @@
 {
-  "name": "quote-service",
+  "name": "cloud-run-node-service",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "type": "module",
   "scripts": {
     "dev": "nodemon --exec 'dotenv -e ./.env -- npm start' ",
     "start": "npx node ./bin/www",
