@@ -23,4 +23,5 @@ jobs:
       - name: Run e2e tests
         run: |
           npm ci
-          E2E_ENDPOINT_URL="${{ github.event.inputs.e2e-endpoint-url }}" npm run test:e2e
+          echo "Using ${{ inputs.e2e-endpoint-url }} as the endpoint url."
+          E2E_ENDPOINT_URL="${{ inputs.e2e-endpoint-url }}" npm run test:e2e
