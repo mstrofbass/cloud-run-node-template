@@ -4,9 +4,9 @@
  * Module dependencies.
  */
 
-var app = require("../app");
-var debug = require("debug")("provider-checker:server");
-var http = require("http");
+import app from "../app.js";
+import debug from "debug";
+import http from "http";
 
 /**
  * Get port from environment and store in Express.
@@ -82,5 +82,5 @@ function onError(error) {
 function onListening() {
   var addr = server.address();
   var bind = typeof addr === "string" ? "pipe " + addr : "port " + addr.port;
-  debug("Listening on " + bind);
+  debug("provider-checker:server")("Listening on " + bind);
 }

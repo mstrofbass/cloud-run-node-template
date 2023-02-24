@@ -6,9 +6,9 @@
   "type": "module",
   "scripts": {
     "dev": "nodemon --exec 'dotenv -e ./.env -- npm start' ",
-    "start": "npx node ./bin/www",
+    "start": "node ./bin/www.js",
     "lint-check": "prettier --ignore-unknown --check '*/**' && eslint . --ext .js --ext .ts",
-    "lint-staged:jest": "jest --bail --findRelatedTests --passWithNoTests",
+    "lint-staged:jest": "NODE_OPTIONS=--experimental-vm-modules npx jest --bail --findRelatedTests --passWithNoTests",
     "prepare": "husky install",
     "test:e2e": "dotenv -e .env.ci -- jest ./spec/e2e",
     "test:integration": "jest ./spec/integration",
