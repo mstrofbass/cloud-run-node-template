@@ -1,6 +1,6 @@
-const {
-  handleRequest,
-} = require("../../../src/routes");
+import { jest } from "@jest/globals";
+
+import { handleRequest } from "../../../src/routes.js";
 
 const mockResponse = () => {
   const res = {};
@@ -18,6 +18,6 @@ describe("handleRequest should", () => {
     handleRequest(req, resp);
 
     expect(resp.status).toHaveBeenCalledWith(200);
-    expect(resp.json).toHaveBeenCalledWith({});
+    expect(resp.json).toHaveBeenCalledWith({ hello: "world" });
   });
 });
