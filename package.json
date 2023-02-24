@@ -10,11 +10,11 @@
     "lint-check": "prettier --ignore-unknown --check '*/**' && eslint . --ext .js --ext .ts",
     "lint-staged:jest": "NODE_OPTIONS=--experimental-vm-modules npx jest --bail --findRelatedTests --passWithNoTests",
     "prepare": "husky install",
-    "test:e2e": "dotenv -e .env.ci -- jest ./spec/e2e",
-    "test:integration": "jest ./spec/integration",
-    "test:non-e2e": "jest ./spec/unit ./spec/integration",
-    "test:unit": "jest ./spec/unit",
-    "test:watch": "jest --testPathIgnorePatterns='spec/e2e/*' --watch"
+    "test:e2e": "vitest run --config vitest.config.e2e.js",
+    "test:integration": "vitest run ./spec/integration",
+    "test:non-e2e": "vitest run  --coverage",
+    "test:unit": "vitest run  --coverage ./spec/unit",
+    "test:watch": "vitest --coverage"
   },
   "repository": {
     "type": "git",
@@ -52,7 +52,7 @@
     "*": "prettier --ignore-unknown --write",
     "{app.js,src/**/*.js}": [
       "eslint --fix",
-      "npm run lint-staged:jest"
+      "vitest related --run"
     ],
     "spec/**/*.js": "eslint --fix"
   }
