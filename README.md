@@ -16,16 +16,16 @@ Specific Features:
 
 1. Automatic project creation and configuration via `bootstrap.sh`.
 1. Basic, functioning `expressjs` service.
-2. `eslint`, `prettier`, and `jest` setup and configured to run automatically on commit via `lint-staged` and `husky`. (This is an "opinionated" configuration only because it's the default configuration that I have been personally using...it's probably not the best!)
-3. `lint` workflow that gets triggered on pushes to any branch but `main` and `release` branches and runs the `lint-check` script.
-4. `push` workflow that gets triggered on pushes to any branch but `main` and `release` branches and runs the unit tests using both `Node.js` versions 18 and 19.
-5. `pull-request` workflow that gets triggered on PR opening and runs the integration tests using both `Node.js` versions 18 and 19. (There are no actual integration tests beyond a placeholder tests currently.)
-6. `trigger-docker-deployment` workflow that gets triggered on push to `main` (e.g., by merging a pull request) with some path restrictions (so it doesn't trigger when you update the `push` workflow, for example)
-7. `docker-build` workflow that is triggered by the `trigger-docker-deployment` workflow (or manually) and builds the Docker image then pushes it to `Artifact Registry`.
-8. `deploy-cloud-run` workflow that is triggered by the `trigger-docker-deployment` workflow when the `docker-build` workflow is successful (or manually) and deploys the Docker image to the Cloud Run service.
-9. `e2e` workflow that should be triggered by the `trigger-docker-deployment` workflow (or manually) after deployment and run the `e2e` tests but is currently disabled.
-10. Workload Identity Federation for authentication between GitHub and GCP.
-11. Workflow configuration via `deployment/config.yml`, which gets automatically generated based on your `gcp-config.sh` config.
+1. `eslint`, `prettier`, and `jest` setup and configured to run automatically on commit via `lint-staged` and `husky`. (This is an "opinionated" configuration only because it's the default configuration that I have been personally using...it's probably not the best!)
+1. `lint` workflow that gets triggered on pushes to any branch but `main` and `release` branches and runs the `lint-check` script.
+1. `push` workflow that gets triggered on pushes to any branch but `main` and `release` branches and runs the unit tests using both `Node.js` versions 18 and 19.
+1. `pull-request` workflow that gets triggered on PR opening and runs the integration tests using both `Node.js` versions 18 and 19. (There are no actual integration tests beyond a placeholder tests currently.)
+1. `trigger-docker-deployment` workflow that gets triggered on push to `main` (e.g., by merging a pull request) with some path restrictions (so it doesn't trigger when you update the `push` workflow, for example)
+1. `docker-build` workflow that is triggered by the `trigger-docker-deployment` workflow (or manually) and builds the Docker image then pushes it to `Artifact Registry`.
+1. `deploy-cloud-run` workflow that is triggered by the `trigger-docker-deployment` workflow when the `docker-build` workflow is successful (or manually) and deploys the Docker image to the Cloud Run service.
+1. `e2e` workflow that should be triggered by the `trigger-docker-deployment` workflow (or manually) after deployment and run the `e2e` tests but is currently disabled.
+1. Workload Identity Federation for authentication between GitHub and GCP.
+1. Workflow configuration via `deployment/config.yml`, which gets automatically generated based on your `gcp-config.sh` config.
 
 Some enhancements that I think might be worthwhile:
 
@@ -47,43 +47,43 @@ Some enhancements that I think might be worthwhile:
 
 ## Instructions
 
-*IMPORTANT:* The GCP project requires billing to be enabled so you _will_ incur normal GCP-related charges. For the most part, this is limited to Artifact Registry and Cloud Run costs, which should be fairly low for a sample project. I am not responsible for any charges you incur.
+_IMPORTANT:_ The GCP project requires billing to be enabled so you _will_ incur normal GCP-related charges. For the most part, this is limited to Artifact Registry and Cloud Run costs, which should be fairly low for a sample project. I am not responsible for any charges you incur.
 
-*Note:* I initially had the project setup instructions listed out step-by-step but they're long and probably confusing. The `bootstrap.sh`, which just executes the necessary `gcloud` commands, is probably just as good for figuring out what steps are needed, so if you want to know what specific steps are required to configure a project, I would review `bootstrap.sh`. 
+_Note:_ I initially had the project setup instructions listed out step-by-step but they're long and probably confusing. The `bootstrap.sh`, which just executes the necessary `gcloud` commands, is probably just as good for figuring out what steps are needed, so if you want to know what specific steps are required to configure a project, I would review `bootstrap.sh`.
 
 ### Initial Setup
 
 1. Create a new repository using this one as the template.
 2. Clone the new repository to your local machine or wherever you want to do development.
 3. Open `gcp-config.sh` and
-  a. Replace the empty string assigned to the `GITHUB_REPO_PATH` variable with your GitHub repository path (e.g., `username/new-repo-name`).
-  b. Replace the empty string assigned to the `SERVICE_NAME` variable with your desired service name.
-  c. Replace the empty string assigned to the `PROJECT_NAME` variable with your desired project name.
-  d. Replace the empty string assigned to the `BILLING_ACCOUNT_ID` variable with your billing account id (e.g., `3215754-215487-659845`).
-  e. Review the other options and update as desired.
-  f. Note that these values must conform to GCP requirements; no validation is performed so if they do not then the bootstrapping process may fail in the middle.
+   a. Replace the empty string assigned to the `GITHUB_REPO_PATH` variable with your GitHub repository path (e.g., `username/new-repo-name`).
+   b. Replace the empty string assigned to the `SERVICE_NAME` variable with your desired service name.
+   c. Replace the empty string assigned to the `PROJECT_NAME` variable with your desired project name.
+   d. Replace the empty string assigned to the `BILLING_ACCOUNT_ID` variable with your billing account id (e.g., `3215754-215487-659845`).
+   e. Review the other options and update as desired.
+   f. Note that these values must conform to GCP requirements; no validation is performed so if they do not then the bootstrapping process may fail in the middle.
 4. Navigate to your project directory in the terminal.
 5. Run `./bootstrap.sh` to create your new project.
 6. If it completed successfully, add, commit, and push the newly generated `deployment/config.yml` file to your remote repository. If it did not, see below.
 7. Go to the Actions tab for your repository on GitHub.
-8. Click on the `Trigger Build and Deployment` Action. 
+8. Click on the `Trigger Build and Deployment` Action.
 9. Click on the `Run workflow` dropdown and, leaving the `main` branch selected, click the `Run workflow` button.
-10. You probably *should not* commit your updated `gcp-config.sh` file to version control. I don't think there's a likelihood of any issues if you do, but there's probably no reason to do it in the first place.
+10. You probably _should not_ commit your updated `gcp-config.sh` file to version control. I don't think there's a likelihood of any issues if you do, but there's probably no reason to do it in the first place.
 
-If all goes well, both the `Build and Push Docker Image` job and the `Deploy Cloud Run` job will run and you should be able to send a `GET` request to your service and get a `JSON` response of `{"hello": "world"}`. 
+If all goes well, both the `Build and Push Docker Image` job and the `Deploy Cloud Run` job will run and you should be able to send a `GET` request to your service and get a `JSON` response of `{"hello": "world"}`.
 
-There are probably a few things that could go wrong during this process, but here are some details of the two most likely: 
+There are probably a few things that could go wrong during this process, but here are some details of the two most likely:
 
 1. The `bootstrap.sh` script failed to complete - This could be any number of problems from invalid config values in `gcp-config.sh` to permissions issues. Generally, however, whatever fails will give you an indication of what the problem, but it's probably going to require some research to figure out what the root cause is. The bigger problem is that `bootstrap.sh` does not supprt re-trying in the case of failure, so you'll have a project that's not fully set up and you can't really do anything except (1) just delete the project and try again or (2) comment out the commands in `bootstrap.sh` that have run and then re-run it again.
 
-2. The build and deployment jobs failed - This could be for any number of reasons. Again, the error messages should be helpful. The most common problem will likely be that you didn't correctly specify the `GITHUB_REPO_PATH` env var. This should be the same basic structure you see in the URL bar on `github.com` for your repo. E.g., if my username is `mstrofbass` and my repo name is `cloud-run-test`, then the path will be `mstrofbass/cloud-run-test`, just like in the GitHub URL. 
+2. The build and deployment jobs failed - This could be for any number of reasons. Again, the error messages should be helpful. The most common problem will likely be that you didn't correctly specify the `GITHUB_REPO_PATH` env var. This should be the same basic structure you see in the URL bar on `github.com` for your repo. E.g., if my username is `mstrofbass` and my repo name is `cloud-run-test`, then the path will be `mstrofbass/cloud-run-test`, just like in the GitHub URL.
 
-To fix this problem, we have to fix the Workload Identity Federation configuration: 
+To fix this problem, we have to fix the Workload Identity Federation configuration:
 
 1. Go to the GCP Cloud Console > IAM & Admin > Workload Identity Federation
 2. You should see a table with your `github` pool listed. Click the link under `Display Name` to go to the pool.
 3. When your pool opens up, you should see a section on the right side that has `PROVIDERS` and `CONNECTED SERVICE ACCOUNTS` tabs. `PROVIDERS` should already be selected and should have a table with your `github` provider in it. Click the pencil icon in that row.
-4. After the provider page loads, scroll all the way down to where it says `Attribute Conditions`. It should have a value that looks like `assertion.repository_visibility == "private" && assertion.repository in ["GITHUB_REPO_PATH"]` where `GITHUB_REPO_PATH` is what you had in your `gcp-config.sh` file. 
+4. After the provider page loads, scroll all the way down to where it says `Attribute Conditions`. It should have a value that looks like `assertion.repository_visibility == "private" && assertion.repository in ["GITHUB_REPO_PATH"]` where `GITHUB_REPO_PATH` is what you had in your `gcp-config.sh` file.
 5. Update the value in the `GITHUB_REPO_PATH` spot to be the correct path to your GitHub repository.
 6. Go back to your GitHub actions and retrigger the `Trigger Build and Deployment` action.
 
@@ -91,12 +91,12 @@ To fix this problem, we have to fix the Workload Identity Federation configurati
 
 If you continue using the repository for development, the general things to be aware of are the following:
 
-1. `eslint`,  `prettier`, and `jest` are run every time you commit, so if any of these fails (e.g., any `eslint` rule is broken or test fails), you will not be able to commit.
+1. `eslint`, `prettier`, and `jest` are run every time you commit, so if any of these fails (e.g., any `eslint` rule is broken or test fails), you will not be able to commit.
 2. The only real test is a unit test for the minimal `handleRequest` function. Any change to that function will break the test.
 3. The `unit` tests are run on `push`, any `integration` tests you add will be run on the opening of a pull request, and any `e2e` tests you write will not run automatically because I don't have that configured yet.
 4. The general idea for the `e2e` tests is to have the URL to the service stored in an environment variable and then have that environment variable set in the `e2e` workflow.
 5. The whole project is set up with the expectation that code will be merged to main _by pull request only_.
 6. When you merge source code to `main` that meets any of the following patterns, the Docker image will automatically be built and deployed. If you want other things to trigger a build and deployment, you need to update the `.github/workflows/trigger-docker-deployment.yml` file.
-  a. app.js
-  c. src/**
-  d. package-lock.json
+   a. app.js
+   c. src/\*\*
+   d. package-lock.json
