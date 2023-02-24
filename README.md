@@ -1,6 +1,17 @@
-# Node-based Cloud Run Service Template
+# Node-based Cloud Run Service Template <!-- omit from toc -->
 
-## What this repository is
+- [What This Repository Is](#what-this-repository-is)
+- [What This Repository Is Not](#what-this-repository-is-not)
+- [Who Should Not Use This Repository](#who-should-not-use-this-repository)
+- [How To Use This Repository](#how-to-use-this-repository)
+- [Step-by-Step Instructions](#step-by-step-instructions)
+  - [1. Prerequisites](#1-prerequisites)
+  - [2. Cloning the repo](#2-cloning-the-repo)
+  - [3. Bootstrapping Cloud Run](#3-bootstrapping-cloud-run)
+  - [4. Deploying the Initial Service](#4-deploying-the-initial-service)
+- [Troubleshooting Steps](#troubleshooting-steps)
+
+## What This Repository Is
 
 The purpose of this repo is to provide a _simple_ template repository that will allow you to deploy a `Node.js`-based service with minimal effort. It has a few different features:
 
@@ -8,7 +19,7 @@ The purpose of this repo is to provide a _simple_ template repository that will 
 2. Minimal "functioning" `expressjs` service with some default project configuration (eslint/prettier/vitest/lint-staged/husky).
 3. GitHub workflows that will do some standard CI/CD stuff like running the lint check and tests, building and pushing the `Docker` image, and deploying the `Docker` image to `Cloud Run`.
 
-## What this repository is not
+## What This Repository Is Not
 
 This repository is not meant to:
 
@@ -20,7 +31,7 @@ This repository is not meant to:
 
 If you are new to Node.js and aren't ready to deal with the hurdles that come with linting and testing requirements, using this template will probably be more frustrating than helpful. It has a non-minimal, opinionated configuration, so unless it just happens to behave exactly as you expect, you're probably going to end up spending a non-negligible amount of time trying to figure out how it's set up and why it's behaving the way it behaves.
 
-## How to use this repository
+## How To Use This Repository
 
 There are two primary use cases for this repository:
 
