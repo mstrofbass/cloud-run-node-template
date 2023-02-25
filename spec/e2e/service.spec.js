@@ -36,8 +36,9 @@ describe("GET / should", () => {
 
 describe("GET /nonexistent-path should", () => {
   test("return a 404", () => {
-    return client.get("/nonexistent-path").then((res) => {
-      expect(res.status).toBe(404);
+    return client.get("/nonexistent-path").catch((err) => {
+      expect(err.response.status).toBe(404);
     });
   });
 });
+
