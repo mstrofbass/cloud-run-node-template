@@ -24,3 +24,9 @@ jobs:
     needs: docker-build
     with:
       yml-config-path: "deployment/config.yml"
+
+  run-e2e-tests:
+    uses: ./.github/workflows/e2e.yml
+    needs: deploy-cloud-run
+    with:
+      yml-config-path: "deployment/config.yml"
