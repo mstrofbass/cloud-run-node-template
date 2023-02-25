@@ -147,6 +147,8 @@ gcloud --project $PROJECT_NAME run deploy $SERVICE_NAME \
   --service-account $SERVICE_SERVICE_ACCOUNT_EMAIL \
   --allow-unauthenticated
 
+SERVICE_URL=$(gcloud --project $PROJECT_NAME run services describe $SERVICE_NAME --platform managed --region $REGION --format 'value(status.url)')
+
 
 ###############
 # Assign IAM roles
@@ -195,4 +197,7 @@ deploy-cloud-run:
   service-name: "$SERVICE_NAME"
   image-path: "$CONTAINER_REGISTRY/$DOCKER_IMAGE_PATH"
   env-vars-file-path: "deployment/env.dev.yml"
+
+e2e-tests:
+  endpoint-url: "$SERVICE_URL"
 config

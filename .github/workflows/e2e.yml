@@ -3,12 +3,12 @@ name: "e2e Tests Workflow"
 on:
   workflow_dispatch:
     inputs:
-      e2e-endpoint-url:
+      yml-config-path:
         required: true
         type: string
   workflow_call:
     inputs:
-      e2e-endpoint-url:
+      yml-config-path:
         required: true
         type: string
 
@@ -20,8 +20,13 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
+      - name: Load environment from YAML
+        uses: doughepi/yaml-env-action@v1.0.0
+        with:
+          files: ${{ inputs.yml-config-path }}
+
       - name: Run e2e tests
         run: |
           npm ci
-          echo "Using ${{ inputs.e2e-endpoint-url }} as the endpoint url."
-          E2E_ENDPOINT_URL="${{ inputs.e2e-endpoint-url }}" npm run test:e2e
+          echo "Using ${{ env.E2E_TESTS_ENDPOINT_URL }} as the endpoint url."
+          E2E_ENDPOINT_URL="${{ env.E2E_TESTS_ENDPOINT_URL }}" npm run test:e2e
