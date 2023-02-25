@@ -64,27 +64,30 @@ _IMPORTANT:_ The GCP project requires billing to be enabled so you _will_ incur 
 
 During this process, we will set the configuration we need to bootstrap our Cloud Run service on GCP and then actually perform the bootstrapping. Although the process seems somewhat long, it should only take about ten minutes, and half of that is waiting for the bootstrapping script to set everything up!
 
-1. Run `npm install` then add and commit the `package-lock.json` file.
-2. Open `gcp-config.sh` and
+1. Checkout a new branch (e.g., `chore/init`).
+2. Run `npm install` then add and commit the `package-lock.json` file.
+3. Open `gcp-config.sh` and
    1. Replace the empty string assigned to the `GITHUB_REPO_PATH` variable with your GitHub repository path (e.g., `username/new-repo-name`).
    2. Replace the empty string assigned to the `SERVICE_NAME` variable with your desired service name.
    3. Replace the empty string assigned to the `PROJECT_NAME` variable with your desired project name.
    4. Replace the empty string assigned to the `BILLING_ACCOUNT_ID` variable with your billing account id (e.g., `3215754-215487-659845`).
    5. Review the other options and update as desired.
    6. Note that these values must conform to GCP requirements; no validation is performed so if they do not then the bootstrapping process may fail in the middle.
-3. Navigate to your project directory in the terminal.
-4. Run `./bootstrap.sh` to create and configure your new project. This should take a few minutes. At least one command (the creation of the workload identity federation pool) is expected to fail and re-run several times after a waiting period. It should succeed after a minute or so.
-5. If the script completes successfully, add, commit, and push the newly generated `deployment/config.yml` file to your remote repository. If it did not, see the troubleshooting steps below.
-6. 4. You probably _should not_ commit your updated `gcp-config.sh` file to version control. I don't think there's a likelihood of any issues if you do, but there's probably no reason to do it in the first place.
+4. Navigate to your project directory in the terminal.
+5. Run `./bootstrap.sh` to create and configure your new project. This should take a few minutes. At least one command (the creation of the workload identity federation pool) is expected to fail and re-run several times after a waiting period. It should succeed after a minute or so.
+6. If the script completes successfully, add and commit the newly generated `deployment/config.yml` file to your remote repository. If it did not, see the troubleshooting steps below.
+7. Remove your billing account id from your `gcp-config.sh` file and then add and commit this file. (I do not know if there's any harm in leaving the billing account id in there, so maybe it's unnecessary to remove it.)
+8. Push the latest commits to your GitHub repository.
 
 ### 4. Deploying the Initial Service
 
 The previous step deployed a `hello-world` container that Google provides to the service, not the actual service in this repository. Thus, our next step is to actually build and deploy our own service.
 
-1. In your GitHub repositry, go to the `Actions` tab.
-2. Click on the `Trigger Build and Deployment` Action, which should be listed on the left side.
-3. Click on the `Run workflow` dropdown and, leaving the `main` branch selected, click the `Run workflow` button.
-4. When the UI updates and shows the workflow running, click into the running workflow to see the status of the individual jobs.
+1. Create a PR from the branch you pushed in the previous steps.
+2. Wait for the workflows to complete. If there are any errors, fix them and then continue.
+3. Merge your PR using whatever merge strategy you prefer.
+4. Click on the `Actions` tab and you should see your `Trigger Build and Deployment` action running (although the actual name will depend on merge strategy you chose).
+5. Click into the running workflow to see the status of the individual jobs.
 
 If all goes well, both the `Build and Push Docker Image` job and the `Deploy Cloud Run` job will run successfully and you should be able to send a `GET` request to your service and get a `JSON` response of `{"hello": "world"}`. To figure out the URL for your newly deployed service, go to `Cloud Run` in the GCP console, click into your service, and the URL should be displayed towards the top.
 
