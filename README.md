@@ -64,17 +64,18 @@ _IMPORTANT:_ The GCP project requires billing to be enabled so you _will_ incur 
 
 During this process, we will set the configuration we need to bootstrap our Cloud Run service on GCP and then actually perform the bootstrapping. Although the process seems somewhat long, it should only take about ten minutes, and half of that is waiting for the bootstrapping script to set everything up!
 
-1. Open `gcp-config.sh` and
+1. Run `npm install` then add and commit the `package-lock.json` file.
+2. Open `gcp-config.sh` and
    1. Replace the empty string assigned to the `GITHUB_REPO_PATH` variable with your GitHub repository path (e.g., `username/new-repo-name`).
-   1. Replace the empty string assigned to the `SERVICE_NAME` variable with your desired service name.
-   1. Replace the empty string assigned to the `PROJECT_NAME` variable with your desired project name.
-   1. Replace the empty string assigned to the `BILLING_ACCOUNT_ID` variable with your billing account id (e.g., `3215754-215487-659845`).
-   1. Review the other options and update as desired.
-   1. Note that these values must conform to GCP requirements; no validation is performed so if they do not then the bootstrapping process may fail in the middle.
-2. Navigate to your project directory in the terminal.
-3. Run `./bootstrap.sh` to create and configure your new project. This should take a few minutes. At least one command (the creation of the workload identity federation pool) is expected to fail and re-run several times after a waiting period. It should succeed after a minute or so.
-4. If the script completes successfully, add, commit, and push the newly generated `deployment/config.yml` file to your remote repository. If it did not, see the troubleshooting steps below.
-5. 4. You probably _should not_ commit your updated `gcp-config.sh` file to version control. I don't think there's a likelihood of any issues if you do, but there's probably no reason to do it in the first place.
+   2. Replace the empty string assigned to the `SERVICE_NAME` variable with your desired service name.
+   3. Replace the empty string assigned to the `PROJECT_NAME` variable with your desired project name.
+   4. Replace the empty string assigned to the `BILLING_ACCOUNT_ID` variable with your billing account id (e.g., `3215754-215487-659845`).
+   5. Review the other options and update as desired.
+   6. Note that these values must conform to GCP requirements; no validation is performed so if they do not then the bootstrapping process may fail in the middle.
+3. Navigate to your project directory in the terminal.
+4. Run `./bootstrap.sh` to create and configure your new project. This should take a few minutes. At least one command (the creation of the workload identity federation pool) is expected to fail and re-run several times after a waiting period. It should succeed after a minute or so.
+5. If the script completes successfully, add, commit, and push the newly generated `deployment/config.yml` file to your remote repository. If it did not, see the troubleshooting steps below.
+6. 4. You probably _should not_ commit your updated `gcp-config.sh` file to version control. I don't think there's a likelihood of any issues if you do, but there's probably no reason to do it in the first place.
 
 ### 4. Deploying the Initial Service
 
